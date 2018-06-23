@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="https://getbootstrap.com/docs/3.3/favicon.ico">
+
+    <title>Destinos Sostenibles en el Mundo</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="./css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./css/jumbotron-narrow.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="./js/ie-emulation-modes-warning.js.download"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="container">
+      <div class="header clearfix">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="#">Home</a></li>
+            <li role="presentation"><a href="#">About</a></li>
+            <li role="presentation"><a href="#">Contact</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Project name</h3>
+      </div>
+      <div>
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <dl class="dl-horizontal">
+                <?php
+                  $usuario = "root";
+                  $password = "";
+                  $servidor = "localhost";
+                  $basededatos = "turismo";
+                  
+                  // creación de la conexión a la base de datos con mysql_connect()
+                  $conexion = mysqli_connect( $servidor, $usuario, "" ) or die ("No se ha podido conectar al servidor de Base de datos");
+                  
+                  // Selección del a base de datos a utilizar
+                  $db = mysqli_select_db( $conexion, $basededatos ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );
+                  // establecer y realizar consulta. guardamos en variable.
+                  $consulta = "SELECT * FROM alojamientos";
+                  $resultado = mysqli_query( $conexion, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos");
+                  
+                  // Bucle while que recorre cada registro y muestra cada campo en la tabla.
+                  while ($columna = mysqli_fetch_array( $resultado ))
+                  {
+                    echo '<div class="row marketing">';
+                      echo '<div class="col-lg-6">';
+                        echo '<h1 class="card-title pricing-card-title">'.$columna['price'].'€<small class="text-muted">/ '.$columna['name'].'</small></h1>';
+                        echo "<dt>Ciudad : </dt><dd>".$columna['city']."</dd>";
+                        echo '<dt>Personas Max.: </dt><dd>'.$columna['maxPersons'].'</dd>';
+                        echo "<dt>Descripcion : </dt><dd>".$columna['description']."</dd>";
+                        if($columna['pets'] == '1') {
+                          echo '<dt>Mascotas : </dt><dd><img src="img/pet.ico" class="img-responsive" style="width:20px; height:20px;"></dd>';
+                        }
+                        if($columna['cookingworkshop'] == '1') {
+                          echo '<dt>Se puede cocinar : </dt><dd><img src="img/cooking.ico" class="img-responsive" style="width:20px; height:20px;"></dd>';
+                        }
+                        if($columna['equestrianRoute'] == '1') {
+                          echo '<dt>Recorrido a Caballo : </dt><dd><img src="img/equestrian.ico" class="img-responsive" style="width:20px; height:20px;"></dd>';
+                        }                                                
+                        if($columna['fishing'] == '1') {
+                          echo '<dt>Actividades de Pesca : </dt><dd><img src="img/fishing.ico" class="img-responsive" style="width:20px; height:20px;"></dd>';
+                        }
+                        if($columna['seaactivities'] == '1') {
+                          echo '<dt>Actividades en el Mar : </dt><dd><img src="img/seaactivities.ico" class="img-responsive" style="width:20px; height:20px;"></dd>';
+                        }
+                      echo '</div><div class="col-lg-6">';
+                        echo '<img src='.$columna['image'].' class="img-responsive" alt="Responsive image">';
+                      echo '</div>';
+                      echo '<button type="button" class="btn btn-lg btn-block btn-success">Vivir Experiencia</button>';
+                    echo '</div>';
+                  }
+                  
+                  echo "</table>";
+                ?>
+                </dl>                                
+            </div>
+        </div>      
+      </div>            
+      <div class="row marketing">                    
+        <div class="col-lg-6">
+            <?php
+            $myfile = fopen("rs/output.txt", "r") or die("Unable to open file!");            
+            $result = fgets($myfile);
+            fclose($myfile);
+            $resultados = json_decode($result,TRUE);
+            // $temperatureMin = $json['daily']['data'][0]['temperatureMin'];
+            echo $resultados['Destination']['1'];
+            ?>
+        </div>
+
+        <div class="col-lg-6">
+          <h4>Subheading</h4>
+          <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+          <h4>Subheading</h4>
+          <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+          <h4>Subheading</h4>
+          <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <p>© 2018 Experience, Inc.</p>
+      </footer>
+
+    </div> <!-- /container -->
+
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./js/ie10-viewport-bug-workaround.js.download"></script>
+  
+
+</body></html>
+<?php
+mysqli_close( $conexion );
+?>
