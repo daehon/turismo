@@ -1,3 +1,29 @@
+<?php
+include("php/api.php");
+	// creación de la conexión a la base de datos con mysql_connect()
+	$conexion = mysqli_connect( "localhost", "root", "" ) or die ("No se ha podido conectar al servidor de Base de datos");	
+	$db = mysqli_select_db( $conexion, "turismo" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );	
+	$consulta = "SELECT * FROM alojamientos WHERE id='1'";
+	$resultado = mysqli_query( $conexion, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos");
+    $columna = mysqli_fetch_array( $resultado);
+    $country = utf8_encode($columna['country']);
+    $url = "http://papi.minube.com/cities?lang=ES";
+    $cities = API::GET($url);    
+    $ciudades = json_decode($cities,TRUE);
+    $country_id = 0; 
+    for($i=1;$i<count($ciudades);$i++){
+        foreach($ciudades[$i] as $clave => $valor) {
+            if($valor == $country){
+                $country_id = $ciudades[$i]['country_id']; 
+            }            
+        }        
+    }
+
+    $url_pois = "http://papi.minube.com/pois?lang=ES&country_id=".$country_id;
+    $pois = API::GET($url_pois);
+    $points = json_decode($pois,TRUE);
+    // xecho $pois;
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -46,58 +72,56 @@
     </div>
 
     <div class="container">
-<?php	
-	// creación de la conexión a la base de datos con mysql_connect()
-	$conexion = mysqli_connect( "localhost", "root", "" ) or die ("No se ha podido conectar al servidor de Base de datos");	
-	$db = mysqli_select_db( $conexion, "turismo" ) or die ( "Upps! Pues va a ser que no se ha podido conectar a la base de datos" );	
-	$consulta = "SELECT * FROM alojamientos WHERE id='1'";
-	$resultado = mysqli_query( $conexion, $consulta ) or die ( "Algo ha ido mal en la consulta a la base de datos");
-    $columna = mysqli_fetch_array( $resultado);
-    echo '<div class="blog-header">
+        <div class="blog-header">
             <h1 class="blog-title">Tu destino mas sostenible</h1>
             <p class="blog-post-meta"><a href="#">Atrevete a cambiar el mundo</a></p>
-         </div>';
-    echo '
+        </div>
         <div class="row">
-            <div class="col-sm-8 blog-main">
-        <div class="blog-post">
-            <h2 class="blog-post-title">'.$columna['name'].'</h2>
-        <p class="blog-post-meta">Hosted by <a href="#">'.$columna['nameOwner'].'</a></p>
-        <p>'.$columna['description'].'</p>
-        <ul>';
-            if($columna['fishing'] == '1') {
-                echo '<li><img src="img/fishing.ico" style="width:20px; height:20px;"> Actividades de Pesca</li>';
-            }
-            if($columna['pets'] == '1') {
-                echo '<li><img src="img/pet.ico" style="width:20px; height:20px;"> Mascotas</li>';
-            }
-            if($columna['cookingworkshop'] == '1') {
-                echo '<li><img src="img/cooking.ico" style="width:20px; height:20px;"> Se permite cocinar</li>';
-            }
-            if($columna['equestrianRoute'] == '1') {
-                echo '<li><img src="img/equestrian.ico" style="width:20px; height:20px;"> Recorrido a caballo</li>';        
-            }                                                
-            if($columna['fishing'] == '1') {
-                echo '<li><img src="img/fishing.ico" style="width:20px; height:20px;"> Actividades de pesca</li>';
-            }
-            if($columna['seaactivities'] == '1') {
-                echo '<li><img src="img/seaactivities.ico" style="width:20px; height:20px;"> Actividades en el Mar</li>';
-            }
-        echo '</ul>
-            <blockquote>
-            <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </blockquote>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-        </div><!-- /.blog-post -->        
-        </div>';
+<?php	
+    echo '<div class="col-sm-8 blog-main">
+            <div class="blog-post">
+                <h2 class="blog-post-title">'.$columna['name'].'</h2>
+                <p class="blog-post-meta">Hosted by <a href="#">'.$columna['nameOwner'].'</a></p>
+                <p>'.$columna['description'].'</p>
+                <ul>';
+                    if($columna['fishing'] == '1') {
+                        echo '<li><img src="img/fishing.ico" style="width:20px; height:20px;"> Actividades de Pesca</li>';
+                    }
+                    if($columna['pets'] == '1') {
+                        echo '<li><img src="img/pet.ico" style="width:20px; height:20px;"> Mascotas</li>';
+                    }
+                    if($columna['cookingworkshop'] == '1') {
+                        echo '<li><img src="img/cooking.ico" style="width:20px; height:20px;"> Se permite cocinar</li>';
+                    }
+                    if($columna['equestrianRoute'] == '1') {
+                        echo '<li><img src="img/equestrian.ico" style="width:20px; height:20px;"> Recorrido a caballo</li>';        
+                    }                                                
+                    if($columna['fishing'] == '1') {
+                        echo '<li><img src="img/fishing.ico" style="width:20px; height:20px;"> Actividades de pesca</li>';
+                    }
+                    if($columna['seaactivities'] == '1') {
+                        echo '<li><img src="img/seaactivities.ico" style="width:20px; height:20px;"> Actividades en el Mar</li>';
+                    }
+                echo '</ul>
+                    <blockquote>
+                    <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                    </blockquote>
+                    <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
+                    <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+            </div><!-- /.blog-post -->';        
         mysqli_close( $conexion );
 ?>
-        <div class="col-sm-3 col-sm-offset-1 blog-sidebar">
-          <div class="sidebar-module sidebar-module-inset">
-            <h4>About</h4>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-          </div>
+        </div>
+        <div class="col-sm-3 col-sm-offset-1 blog-sidebar"> 
+<?php
+        for($i=1;$i<6;$i++){
+            echo '<div class="sidebar-module sidebar-module-inset">';
+            echo '<h4>'.$points[$i]["name"].'About</h4>';
+            echo '<img src='.$points[$i]['picture_url'].' class="img-responsive" alt="Responsive image">';
+            echo '<a href="https://www.google.com/maps/?q='.$points[$i]['latitude'].','.$points[$i]['longitude'].'" target="_blank">ver en Maps.</a>';
+            echo '</div>';
+        }
+?>                 
         </div><!-- /.row -->';
 
     </div><!-- /.container -->
