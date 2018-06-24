@@ -32,18 +32,28 @@
   </head>
 
   <body>
-
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+              <a href="index.html"><img src="img/logo_.png" style=" width: 30%;"></a>
+            <ul class="nav navbar-nav">                      
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">¿Quienes somos?</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
     <div class="container">
-      <div class="header clearfix">
-        <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">About</a></li>
-            <li role="presentation"><a href="#">Contact</a></li>
-          </ul>
-        </nav>
-        <h3 class="text-muted">Project name</h3>
-      </div>
       <div>
         <div class="card mb-4 box-shadow">
             <div class="card-body">
@@ -90,7 +100,7 @@
                       echo '</div><div class="col-lg-6">';
                         echo '<img src='.$columna['image'].' class="img-responsive" alt="Responsive image">';
                       echo '</div>';
-                      echo '<button type="button" class="btn btn-lg btn-block btn-success">Vivir Experiencia</button>';
+                      echo '<p><a class="btn btn-lg  btn-success" href="destino.php" role="button">Vivir Experiencia »</a></p>';
                     echo '</div>';
                   }
                   
